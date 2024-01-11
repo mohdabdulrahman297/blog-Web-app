@@ -1,13 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const User = require('./models/User');
-const bcrypt = require('bcryptjs');
-const app = express();
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js'
+import User from './models/User.js'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 dotenv.config();
+
+const app = express();
 
 const salt = bcrypt.genSaltSync(10);
 mongoose
@@ -30,6 +32,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+
 app.post('/register', async(req, res) => {
     const {username, password} = req.body;
     try {
@@ -45,23 +48,7 @@ app.post('/register', async(req, res) => {
 });
 
 
-app.post('/login', async (req,res) => {
-    const {username,password} = req.body;
-    const userDoc = await User.findOne({username});
-    const passOk = bcrypt.compareSync(password, userDoc.password);
-    if (passOk) {
-      // logged in
-      jwt.sign({username,id:userDoc._id}, process.env.JWT_SECRET, {}, (err,token) => {
-        if (err) throw err;
-        res.cookie('token', token).json({
-          id:userDoc._id,
-          username,
-        }); 
-      });
-    } else {
-      res.status(400).json('wrong credentials');
-    }
-  });
+app.use('/auth', authRoutes);
 
   app.get('/profile', (req,res) => {
     const {token} = req.cookies;
