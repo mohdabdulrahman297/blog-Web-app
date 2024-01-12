@@ -1,112 +1,124 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 
-const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
-
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-];
-
-export default function CreatePost() {
+const CreatePost = () => {
+  // State variables to store form input values
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
+  const [file, setFile] = useState(null);
+
+  // React Router hook for programmatic navigation
+  const navigate = useNavigate();
+
+  // Function to handle form submission
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    // Creating a FormData object to send form data as a multipart/form-data
+    const formData = new FormData();
+    formData.set("Title", title);
+    formData.set("Summary", summary);
+    formData.set("File", file);
+    formData.set("Content", content);
+
+    // Retrieving the authentication token from local storage
+    const token = localStorage.getItem("token");
+
+    // Sending a POST request to the server endpoint '/newpost'
+    const response = await fetch("http://localhost:4000/newpost", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `${token}`,
+      },
+      credentials: "include",
+    });
+
+    // Handling the response from the server
+    if ((await response.json()) === "ok") {
+      // If the response is 'ok', navigate to the home page
+      navigate("/");
+    } else {
+      // If there's an error, show an alert
+      alert("Error! Fill all fields");
+    }
+  }
 
   return (
-    <form className="max-w-md mx-auto mt-8 p-6 bg-gradient-to-r from-blue-200 to-purple-300 shadow-lg rounded-md">
-      <h2 className="text-2xl font-bold mb-4 text-black">Create a New Post</h2>
-
-      <div className="mb-4">
-        <label
-          htmlFor="title"
-          className="block text-black text-sm font-semibold mb-2"
+    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-4xl font-bold mb-6 text-center text-blue-500">
+        Create a Post
+      </h1>
+      <form className="space-y-6">
+        <div>
+          <label htmlFor="title" className="text-sm font-medium text-gray-600">
+            Title
+          </label>
+          <input
+            type="text"
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            value={title}
+            className="w-full p-3 border-b-2 border-blue-400 focus:outline-none focus:border-blue-600"
+            placeholder="Enter your title"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="summary"
+            className="text-sm font-medium text-gray-600"
+          >
+            Summary
+          </label>
+          <input
+            type="text"
+            onChange={(e) => {
+              setSummary(e.target.value);
+            }}
+            value={summary}
+            className="w-full p-3 border-b-2 border-blue-400 focus:outline-none focus:border-blue-600"
+            placeholder="Provide a brief summary"
+          />
+        </div>
+        <div>
+          <label htmlFor="file" className="text-sm font-medium text-gray-600">
+            Choose a File
+          </label>
+          <input
+            type="file"
+            onChange={(e) => {
+              setFile(e.target.files[0]);
+            }}
+            className="w-full p-3 border-b-2 border-blue-400 focus:outline-none focus:border-blue-600"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="content"
+            className="text-lg font-semibold text-gray-700"
+          >
+            Content
+          </label>
+          <ReactQuill
+            onChange={(Content) => setContent(Content)}
+            className="QuillContent border rounded p-3"
+            theme="snow"
+            value={content}
+          />
+        </div>
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-blue-500 text-white text-xl p-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue"
         >
-          Title
-        </label>
-        <input
-          type="text"
-          name="title"
-          value={title}
-          onChange={(ev) => setTitle(ev.target.value)}
-          placeholder="Enter your title"
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label
-          htmlFor="summary"
-          className="block text-black text-sm font-semibold mb-2"
-        >
-          Summary
-        </label>
-        <input
-          type="text"
-          name="summary"
-          value={summary}
-          onChange={(ev) => setSummary(ev.target.value)}
-          placeholder="Enter a summary"
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label
-          htmlFor="file"
-          className="block text-black text-sm font-semibold mb-2"
-        >
-          Upload File
-        </label>
-        <input
-          type="file"
-          name="file"
-          id="file"
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring focus:border-blue-300 transition duration-300"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label
-          htmlFor="content"
-          className="block text-black text-sm font-semibold mb-2"
-        >
-          Content
-        </label>
-        <ReactQuill
-          className="border rounded-md bg-white text-gray-800 p-4"
-          value={content}
-          modules={modules}
-          formats={formats}
-        />
-      </div>
-
-      <button className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300 transition duration-300">
-        Publish
-      </button>
-    </form>
+          Create Post
+        </button>
+      </form>
+    </div>
   );
-}
+};
+
+export default CreatePost;

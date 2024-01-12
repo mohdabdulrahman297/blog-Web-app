@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cloudinary from 'cloudinary'
 import authRoutes from './routes/auth.js'
+import postRoute from './routes/newPost.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
@@ -32,7 +34,17 @@ app.use(cookieParser());
 
 
 
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
+
+
 app.use('/auth', authRoutes);
+
+app.use('/newpost', postRoute);
 
   app.get('/profile', (req,res) => {
     const {token} = req.cookies;

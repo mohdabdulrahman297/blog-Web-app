@@ -39,3 +39,20 @@ export const login = async(req,res) =>{
         })
     }
 }
+
+export const check = async (req, res) => {
+    const header = req.headers;
+    console.log(header);
+    const token = header?.authorization;
+    if (!token) {
+      return res.json('');
+    }
+  
+    jwt.verify(token, process.env.JWT_SECRET, {}, (err, info) => {
+      if (err) {
+        throw err;
+      }
+      res.json(info);
+    });
+  };
+  
