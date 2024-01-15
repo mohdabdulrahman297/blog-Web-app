@@ -30,10 +30,10 @@ export const addComment = async(req, res) => {
             user:name,
             content
         }
-        path.Comments.push(newComment);
+        post.Comments.push(newComment);
 
         res.status(200).json(await post.save());
     } catch (error) {
-        res.json(err);
+        res.json(error);
     }
 }
