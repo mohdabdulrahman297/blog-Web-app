@@ -6,6 +6,7 @@ import cloudinary from 'cloudinary'
 import authRoutes from './routes/auth.js'
 import postRoute from './routes/newPost.js'
 import getPostsRoute from './routes/getPosts.js'
+import deletePostRoute from './routes/deletePost.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
@@ -48,6 +49,8 @@ app.use('/auth', authRoutes);
 app.use('/newpost', postRoute);
 
 app.use('/getPosts', getPostsRoute);
+
+app.use('/deletePost', deletePostRoute);
 
   app.get('/profile', (req,res) => {
     const {token} = req.cookies;

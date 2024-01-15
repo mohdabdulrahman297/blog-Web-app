@@ -10,7 +10,7 @@ const Post = (props) => {
             <img
               src={props.Cover}
               alt={props.Title}
-              className="w-full h-40 object-cover rounded-md border border-gray-300"
+              className="w-full h-60 object-cover rounded-md border border-gray-300"
             />
           </div>
           <div className="content">
@@ -18,7 +18,7 @@ const Post = (props) => {
               {props.Title}
             </h1>
             <div className="info text-gray-700 flex items-center mb-2">
-              <div className="author">by {props.Author.username}</div>
+              <div className="author">By {props.Author.username}</div>
               <span className="mx-2">&middot;</span>
               <time className="text-gray-600">
                 {format(new Date(props.updatedAt), "MMM d yyyy")}

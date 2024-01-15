@@ -49,7 +49,7 @@ const CreatePost = () => {
 
   return (
     <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-4xl font-bold-300 mb-6 text-center text-blue-500">
+      <h1 className="text-4xl font-bold-600 mb-6 text-center text-black-500">
         Create a Post
       </h1>
       <form className="space-y-6">

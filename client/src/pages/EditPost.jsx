@@ -49,44 +49,67 @@ export default function EditPost() {
   }
 
   return (
-    <div className="createpost">
-      <div>
-        <h1>Edit Post</h1>
-      </div>
+    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-4xl font-bold-600 mb-6 text-center text-black-500">
+        Edit Post
+      </h1>
 
-      <form>
-        <input
-          type="text"
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          placeholder="Title"
-          value={title}
-        />
-        <input
-          type="text"
-          onChange={(e) => {
-            setSummary(e.target.value);
-          }}
-          placeholder="Summary"
-          value={summary}
-        />
-        <input
-          type="file"
-          onChange={(e) => {
-            setFile(e.target.files[0]);
-          }}
-        />
-        <h3>Content</h3>
-        <ReactQuill
-          onChange={(Content) => {
-            setContent(Content);
-          }}
-          className="QuillContent"
-          theme="snow"
-          value={content}
-        />
-        <button onClick={updatePost} className="Btn">
+      <form className="space-y-6">
+        <div>
+          <label htmlFor="title" className="text-sm font-medium text-gray-600">
+            Title
+          </label>
+          <input
+            type="text"
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+            value={title}
+            className="w-full p-3 border-b-2 border-blue-400 focus:outline-none focus:border-blue-600"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="summary"
+            className="text-sm font-medium text-gray-600"
+          >
+            Summary
+          </label>
+          <input
+            type="text"
+            onChange={(e) => setSummary(e.target.value)}
+            placeholder="Summary"
+            value={summary}
+            className="w-full p-3 border-b-2 border-blue-400 focus:outline-none focus:border-blue-600"
+          />
+        </div>
+        <div>
+          <label htmlFor="file" className="text-sm font-medium text-gray-600">
+            Choose a File
+          </label>
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="w-full p-3 border-b-2 border-blue-400 focus:outline-none focus:border-blue-600"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="content"
+            className="text-lg font-semibold text-gray-700"
+          >
+            Content
+          </label>
+          <ReactQuill
+            onChange={(Content) => setContent(Content)}
+            className="QuillContent border rounded p-3"
+            theme="snow"
+            value={content}
+          />
+        </div>
+        <button
+          onClick={updatePost}
+          className="w-full bg-blue-500 text-white text-xl p-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue"
+        >
           Update Post
         </button>
       </form>
