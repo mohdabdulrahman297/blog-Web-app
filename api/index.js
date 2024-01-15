@@ -11,7 +11,10 @@ import updatePostRoute from './routes/updatePost.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 dotenv.config();
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -31,7 +34,7 @@ res.json ('test done');
 });
 
 
-app.use(cors({credentials:true,origin:'http://localhost:5173'}));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -54,6 +57,12 @@ app.use('/getPosts', getPostsRoute);
 app.use('/deletePost', deletePostRoute);
 
 app.use('/updatePost', updatePostRoute);
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
 
   app.get('/profile', (req,res) => {
     const {token} = req.cookies;
