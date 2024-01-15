@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cloudinary from 'cloudinary'
 import authRoutes from './routes/auth.js'
 import postRoute from './routes/newPost.js'
+import getPostsRoute from './routes/getPosts.js'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
@@ -45,6 +46,8 @@ cloudinary.v2.config({
 app.use('/auth', authRoutes);
 
 app.use('/newpost', postRoute);
+
+app.use('/getPosts', getPostsRoute);
 
   app.get('/profile', (req,res) => {
     const {token} = req.cookies;
